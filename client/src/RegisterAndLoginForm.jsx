@@ -2,6 +2,8 @@ import axios from "axios"
 import {useContext,useState} from "react"
 import { UserContext } from "./UserContext";
 
+import chatotBackground from './images/chatot_background.jpg'
+
 export default function Register() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -42,7 +44,18 @@ export default function Register() {
 
 
     return (
-        <div className="bg-blue-50 h-screen flex items-center">
+        
+        <div 
+            style={{
+                backgroundImage: `url(${chatotBackground})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                height: '100vh', // Use 'vh' unit to cover full viewport height
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
             <form className="w-64 mx-auto mb-12" onSubmit={handleSubmit}>
                 {
                     error && (
