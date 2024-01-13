@@ -3,6 +3,7 @@ import {useContext,useState} from "react"
 import { UserContext } from "./UserContext";
 
 import chatotBackground from './images/chatot_background.jpg'
+import { motion } from 'framer-motion';
 
 export default function Register() {
     const [username, setUsername] = useState('')
@@ -12,6 +13,19 @@ export default function Register() {
     const {setUsername:setLoggedInUsername, setId} = useContext(UserContext);
     
     const [error, setError] = useState(null);
+
+    const inputVariants = {
+        initial: {
+            scale: 1,
+            borderColor: "#ccc", // Normal border color
+            boxShadow: "0px 0px 0px rgba(0, 0, 0, 0)" // No shadow initially
+        },
+        focus: {
+            scale: 1.05, // Slightly larger when focused
+            borderColor: "#4a90e2", // Highlighted border color
+            boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.2)" // Soft shadow for depth
+        }
+    };
     
     
     async function handleSubmit(ev) {
@@ -57,6 +71,12 @@ export default function Register() {
             }}
         >
             <form className="w-64 mx-auto mb-12" onSubmit={handleSubmit}>
+                <h1 className="text-4xl font-bold text-center mb-6" style={{ 
+                    color: '#34568B', // Darker shade of blue
+                    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' // Soft shadow for depth
+                }}>
+                    ChirpChat
+                </h1>
                 {
                     error && (
                         <div className="text-red-500 text-center mb-2">
@@ -64,14 +84,28 @@ export default function Register() {
                         </div>
                     )
                 }
-                <input value={username} 
-                    onChange={ev => setUsername(ev.target.value)}
-                    type="text" placeholder="username" 
-                    className="block w-full rounded-sm p-2 mb-2 border "/>
-                <input value={password} 
-                    onChange={ev => setPassword(ev.target.value)}
-                    type="password" placeholder="password" 
-                    className="block w-full rounded-sm p-2 mb-2"/>
+                <motion.input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    variants={inputVariants}
+                    initial="initial"
+                    animate="initial"
+                    whileFocus="focus"
+                    className="block w-full rounded-sm p-2 mb-2 border"
+                />
+                <motion.input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    variants={inputVariants}
+                    initial="initial"
+                    animate="initial"
+                    whileFocus="focus"
+                    className="block w-full rounded-sm p-2 mb-2 border"
+                />
                 <button className="bg-blue-500 text-white block w-full rounded-sm p-2">
                     {isLoginOrRegister === 'register' ? 'Register' : 'Login'}
                 </button>
