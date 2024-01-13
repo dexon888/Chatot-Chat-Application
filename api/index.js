@@ -77,46 +77,62 @@ app.get('/profile', (req,res) => {
 })
 
 app.post('/login', async (req, res) => {
-    const {username, password} = req.body;
-    const foundUser = await User.findOne({username})
-    if (foundUser) {
-        const passOk = bcrypt.compareSync(password, foundUser.password)
-        if (passOk) {
-            jwt.sign({userId:foundUser._id, username}, jwtSecret, {}, (err, token) => {
-                res.cookie('token', token, {sameSite:'none', secure:true}).json({
-                    id: foundUser._id,
-
-                });
-            })
+    const { username, password } = req.body;
+    try {
+        const foundUser = await User.findOne({ username });
+        if (!foundUser) {
+            return res.status(401).json({ message: "Invalid credentials" });
         }
-    }
 
-})
+        const passOk = bcrypt.compareSync(password, foundUser.password);
+        if (!passOk) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+
+        jwt.sign({ userId: foundUser._id, username }, jwtSecret, {}, (err, token) => {
+            if (err) {
+                return res.status(500).json({ message: "Error generating token" });
+            }
+            res.cookie('token', token, { sameSite: 'none', secure: true }).json({ id: foundUser._id });
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 app.post('/logout', (req, res) => {
     res.cookie('token', '', { expires: new Date(0), sameSite: 'none', secure: true })
        .json('Logged out successfully');
 })
 
-app.post('/register', async (req,res) => {
-    const {username, password} = req.body;
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body;
     try {
-        const hashedPassword = bcrypt.hashSync(password, bcryptSalt)
+        // Check if user already exists
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(409).json({ message: "A user already exists with that username" });
+        }
+
+        // If user doesn't exist, proceed with creating a new user
+        const hashedPassword = bcrypt.hashSync(password, bcryptSalt);
         const createdUser = await User.create({
-            username:username, 
-            password:hashedPassword,
+            username,
+            password: hashedPassword,
         });
-        jwt.sign({userId:createdUser._id, username}, jwtSecret, {}, (err, token) => {
-        if (err) throw err;
-        res.cookie('token', token, {sameSite:'none', secure:true}).status(201).json({
-            id: createdUser._id,
-        })
-    });
+        jwt.sign({ userId: createdUser._id, username }, jwtSecret, {}, (err, token) => {
+            if (err) {
+                return res.status(500).json({ message: "Error generating token" });
+            }
+            res.cookie('token', token, { sameSite: 'none', secure: true }).status(201).json({
+                id: createdUser._id,
+            });
+        });
     } catch (err) {
-        if (err) throw err;
-        res.status(500).json('error')
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
     }
-    
 });
 
 const server = app.listen(4040);
