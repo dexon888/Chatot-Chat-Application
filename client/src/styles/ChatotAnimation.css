@@ -1,0 +1,27 @@
+.chatot-animation-container {
+    /* Styles for centering and spacing */
+    text-align: center;
+    /* Center the contents */
+    padding: 20px 0;
+    /* Add some padding around the animation */
+}
+
+.visible {
+    opacity: 1;
+}
+
+.hidden {
+    opacity: 0;
+}
+
+@keyframes floatAnimation {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}

@@ -3,6 +3,9 @@ import {useContext,useState} from "react"
 import { UserContext } from "./UserContext";
 
 import chatotBackground from './images/chatot_background.jpg'
+import dancingChatot from './images/dancing_chatot.gif';
+import musicNote from './images/musicnote.png';
+import './styles/ChatotAnimation.css';
 import { motion } from 'framer-motion';
 
 export default function Register() {
@@ -13,6 +16,8 @@ export default function Register() {
     const {setUsername:setLoggedInUsername, setId} = useContext(UserContext);
     
     const [error, setError] = useState(null);
+
+    const [showAnimation, setShowAnimation] = useState(false);
 
     const inputVariants = {
         initial: {
@@ -58,18 +63,18 @@ export default function Register() {
 
 
     return (
+
         
-        <div 
-            style={{
-                backgroundImage: `url(${chatotBackground})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                height: '100vh', // Use 'vh' unit to cover full viewport height
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}
-        >
+        <div className="main-container" style={{ 
+            backgroundImage: `url(${chatotBackground})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center'
+        }}>
             <form className="w-64 mx-auto mb-12" onSubmit={handleSubmit}>
                 <h1 className="text-4xl font-bold text-center mb-6" style={{ 
                     color: '#34568B', // Darker shade of blue
@@ -89,6 +94,8 @@ export default function Register() {
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    onFocus={() => setShowAnimation(true)}
+                    onBlur={() => setShowAnimation(false)}
                     variants={inputVariants}
                     initial="initial"
                     animate="initial"
@@ -100,6 +107,8 @@ export default function Register() {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    onFocus={() => setShowAnimation(true)}
+                    onBlur={() => setShowAnimation(false)}
                     variants={inputVariants}
                     initial="initial"
                     animate="initial"
@@ -127,7 +136,11 @@ export default function Register() {
                         </div>
                     )}
                 </div>
+                <div className="chatot-animation-container">
+                    <img src={dancingChatot} alt="Dancing Chatot" className={showAnimation ? "visible" : "hidden"} />
+                </div>
             </form>
+            
         </div>
     )
 }
