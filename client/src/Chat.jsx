@@ -35,8 +35,12 @@ export default function Chat() {
     function showOnlinePeople(peopleArray) {
         const people = {};
         peopleArray.forEach(({userId, username}) => {
-            people[userId] = username
-        })
+            if (userId && username) {
+                people[userId] = username;
+            } else {
+                console.log('Invalid entry in peopleArray:', {userId, username});
+            }
+        });
         setOnlinePeople(people);
     }
 
@@ -132,7 +136,6 @@ export default function Chat() {
     delete onlinePeopleExcludeUser[id]
 
     const messagesWithoutDuplicates = uniqBy(messages, '_id')
-
     
 
     return (
