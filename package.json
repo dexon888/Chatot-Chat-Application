@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node api/server.js",
+    "start": "node api/index.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "author": "Brandon Ding",
