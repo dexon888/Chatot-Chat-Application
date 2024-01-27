@@ -13,6 +13,7 @@ export default function Chat() {
     const {username, id, setId, setUsername} = useContext(UserContext)
     const [newMessageText, setNewMessageText] = useState('')
     const [messages, setMessages] = useState([])
+    const wsServerUrl = process.env.REACT_APP_WS_BASE_URL;
 
     const divUnderMessages = useRef();
 
@@ -21,7 +22,6 @@ export default function Chat() {
     }, [])
 
     function connectToWs() {
-        const wsServerUrl = process.env.REACT_APP_WS_BASE_URL;
         console.log(wsServerUrl)
         const ws = new WebSocket(wsServerUrl);
         setWs(ws);
