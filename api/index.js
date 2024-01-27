@@ -42,6 +42,10 @@ async function getUserDataFromRequest(req) {
     })
 }
 
+app.get('/', (req, res) => {
+  res.send('Welcome to my app!');
+});
+
 app.get('/test', (req, res) => {
     res.json('test ok')
 })
