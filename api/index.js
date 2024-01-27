@@ -11,6 +11,7 @@ const ws = require('ws');
 const fs = require('fs');
 
 
+
 mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log("MongoDB successfully connected"))
     .catch(err => console.error("MongoDB connection error:", err));
@@ -27,6 +28,12 @@ app.use(cors({
     credentials: true,
     origin: process.env.CLIENT_URL,
 }));
+
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
+});
 
 async function getUserDataFromRequest(req) {
     return new Promise((resolve, reject) => {
