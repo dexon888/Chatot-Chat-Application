@@ -11,7 +11,7 @@ const ws = require('ws');
 const fs = require('fs');
 const path = require('path')
 
-
+console.log(process.env);
 
 mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log("MongoDB successfully connected"))

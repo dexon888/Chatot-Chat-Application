@@ -22,7 +22,7 @@ export default function Chat() {
     }, [])
 
     function connectToWs() {
-        console.log(wsServerUrl)
+        console.log('WebSocket URL:', wsServerUrl);
         const ws = new WebSocket(wsServerUrl);
         setWs(ws);
         ws.addEventListener('message', handleMessage)
