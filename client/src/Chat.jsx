@@ -22,6 +22,7 @@ export default function Chat() {
 
     function connectToWs() {
         const wsServerUrl = process.env.REACT_APP_WS_BASE_URL;
+        console.log(wsServerUrl)
         const ws = new WebSocket(wsServerUrl);
         setWs(ws);
         ws.addEventListener('message', handleMessage)
