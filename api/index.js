@@ -30,11 +30,6 @@ app.use(cors({
     origin: process.env.CLIENT_URL,
 }));
 
-app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
-});
 
 async function getUserDataFromRequest(req) {
     return new Promise((resolve, reject) => {
@@ -147,7 +142,13 @@ app.post('/register', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 4040;
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
+});
+
+const PORT = process.env.PORT;
 const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
