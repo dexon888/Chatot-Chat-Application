@@ -11,7 +11,7 @@ const ws = require('ws');
 const fs = require('fs');
 const path = require('path')
 
-console.log(process.env);
+
 
 mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log("MongoDB successfully connected"))
@@ -30,6 +30,11 @@ app.use(cors({
     origin: process.env.CLIENT_URL,
 }));
 
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
+});
 
 async function getUserDataFromRequest(req) {
     return new Promise((resolve, reject) => {
@@ -140,12 +145,6 @@ app.post('/register', async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
     }
-});
-
-app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
 });
 
 const PORT = process.env.PORT || 4040;
