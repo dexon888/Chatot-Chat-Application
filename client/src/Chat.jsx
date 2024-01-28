@@ -3,7 +3,7 @@ import Avatar from "./Avatar";
 import Contact from "./Contact.jsx";
 import Logo from "./Logo";
 import {UserContext} from "./UserContext.jsx"
-import {uniqBy} from "lodash"
+import {uniqBy, throttle} from "lodash"
 import axios from 'axios'
 export default function Chat() {
     const [ws, setWs] = useState(null);
@@ -22,7 +22,6 @@ export default function Chat() {
     }, [])
 
     function connectToWs() {
-        console.log('WebSocket URL:', wsServerUrl);
         const ws = new WebSocket(wsServerUrl);
         setWs(ws);
         ws.addEventListener('message', handleMessage)
@@ -113,18 +112,22 @@ export default function Chat() {
            
     }, [messages]);
 
-    useEffect(() => {
+    const fetchPeople = throttle(() => {
         axios.get('/people').then(res => {
             const offlinePeopleArr = res.data
             .filter(p => p._id !== id)
-            .filter(p => !Object.keys(onlinePeople).includes(p._id))
+            .filter(p => !Object.keys(onlinePeople).includes(p._id));
             const offlinePeople = {};
             offlinePeopleArr.forEach(p => {
-                offlinePeople[p._id] = p
-            })
+                offlinePeople[p._id] = p;
+            });
             setOfflinePeople(offlinePeople);
-        })
-    }, [onlinePeople])
+        });
+    }, 10000); // Adjust the time (in milliseconds) as needed
+
+    useEffect(() => {
+        fetchPeople();
+    }, [onlinePeople]);
 
     useEffect(() => {   
         if (selectedUserId) {
