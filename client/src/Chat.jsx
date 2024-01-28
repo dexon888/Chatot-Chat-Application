@@ -13,7 +13,7 @@ export default function Chat() {
     const {username, id, setId, setUsername} = useContext(UserContext)
     const [newMessageText, setNewMessageText] = useState('')
     const [messages, setMessages] = useState([])
-    const wsServerUrl = process.env.REACT_APP_WS_BASE_URL;
+    const wsServerUrl = process.env.REACT_APP_WS_BASE_URL || 'wss://chirpchat-e5b3461b18c5.herokuapp.com';
 
     const divUnderMessages = useRef();
 
