@@ -141,6 +141,8 @@ export default function Chat() {
     delete onlinePeopleExcludeUser[id]
 
     const messagesWithoutDuplicates = uniqBy(messages, '_id')
+
+    console.log(messagesWithoutDuplicates)
     
 
     return (
